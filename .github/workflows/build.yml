@@ -15,16 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set target to ESP32-S3
-        run: idf.py set-target esp32s3
-
-      - name: Configure board
+      - name: Build firmware
         run: |
+          . /opt/esp/idf/export.sh
+          idf.py set-target esp32s3
           cp sdkconfig.defaults.esp32s3 sdkconfig.defaults
           echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
-
-      - name: Build firmware
-        run: idf.py build
+          idf.py build
 
       - name: Archive firmware
         uses: actions/upload-artifact@v4
