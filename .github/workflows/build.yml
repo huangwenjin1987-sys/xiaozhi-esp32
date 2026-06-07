@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: espressif/idf:release-v5.5
+    defaults:
+      run:
+        shell: bash -leo pipefail {0}
 
     steps:
       - uses: actions/checkout@v4
@@ -19,10 +22,13 @@ jobs:
       - name: Build firmware
         run: |
           . /opt/esp/idf/export.sh
+          command -v idf.py
+          idf.py --version
           python scripts/release.py waveshare/esp32-s3-touch-lcd-1.83
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: xiaozhi-firmware
-          path: releases/*.bin
+          path: releases/*.zip
+          if-no-files-found: error
