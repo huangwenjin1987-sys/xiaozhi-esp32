@@ -8,28 +8,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ESP-IDF
-        uses: espressif/install-esp-idf-action@v1
-        with:
-          version: v5.5
-
-      - name: Set target
+      - name: Install system dependencies
         run: |
-          . $HOME/esp/esp-idf/export.sh
+          sudo apt-get update
+          sudo apt-get install -y git wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+
+      - name: Clone ESP-IDF
+        run: |
+          git clone -b v5.5 --depth 1 --recursive https://github.com/espressif/esp-idf.git $HOME/esp-idf
+
+      - name: Install ESP-IDF tools
+        run: |
+          cd $HOME/esp-idf
+          python3 -m pip install -r requirements.txt
+          python3 tools/idf_tools.py install esp32s3
+
+      - name: Build firmware
+        run: |
+          cd $GITHUB_WORKSPACE
+          . $HOME/esp-idf/export.sh
           idf.py set-target esp32s3
-
-      - name: Configure board
-        run: |
-          . $HOME/esp/esp-idf/export.sh
-          cp sdkconfig.defaults.esp32s3 sdkconfig.defaults
+          cp sdkconfig.defaults.esp32s3 sdkconfig.defaults || true
           echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
-
-      - name: Build
-        run: |
-          . $HOME/esp/esp-idf/export.sh
           idf.py build
 
       - name: Archive firmware
