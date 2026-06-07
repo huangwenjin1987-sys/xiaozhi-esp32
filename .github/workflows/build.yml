@@ -8,42 +8,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ESP-IDF
-        uses: espressif/install-esp-idf-action@v1
+      - name: Build ESP-IDF project
+        uses: espressif/build-esp-idf-projects-action@v1
         with:
-          version: v5.5
+          sdkconfig: sdkconfig.defaults.esp32s3
 
-      - name: Debug - find idf.py
-        run: |
-          echo "=== Looking for idf.py ==="
-          find / -name "idf.py" -type f 2>/dev/null | head -10
-          echo "=== Check HOME/esp ==="
-          ls -la $HOME/esp/ 2>/dev/null || echo "no $HOME/esp"
-          echo "=== Check /opt ==="
-          ls /opt/ 2>/dev/null
-          echo "=== Check PATH ==="
-          echo $PATH
-
-      - name: Build firmware
-        run: |
-          IDF_PATH=$(find / -name "export.sh" -path "*/esp-idf/*" 2>/dev/null | head -1)
-          echo "Found export.sh at: $IDF_PATH"
-          if [ -n "$IDF_PATH" ]; then
-            . $IDF_PATH
-            idf.py set-target esp32s3
-            cp sdkconfig.defaults.esp32s3 sdkconfig.defaults
-            echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
-            idf.py build
-          else
-            echo "ESP-IDF not found!"
-            exit 1
-          fi
-
-      - name: Archive firmware
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: xiaozhi-firmware
