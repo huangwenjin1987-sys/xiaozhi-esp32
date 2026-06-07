@@ -8,19 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:release-v5.5
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ESP-IDF
-        uses: espressif/install-esp-idf-action@v1
-        with:
-          version: v5.5
-
       - name: Build firmware
-        shell: bash
         run: |
-          . $HOME/esp/esp-idf/export.sh
           idf.py set-target esp32s3
           cp sdkconfig.defaults.esp32s3 sdkconfig.defaults
           echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
@@ -34,4 +29,3 @@ jobs:
             build/bootloader/bootloader.bin
             build/partition_table/partition-table.bin
             build/xiaozhi.bin
-            build/ota_data_initial.bin
