@@ -11,6 +11,10 @@ jobs:
     container:
       image: espressif/idf:release-v5.5
 
+    defaults:
+      run:
+        shell: bash -l {0}
+
     steps:
       - uses: actions/checkout@v4
 
