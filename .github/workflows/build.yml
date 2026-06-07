@@ -8,13 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:release-v5.5
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build ESP-IDF project
-        uses: espressif/build-esp-idf-projects-action@v1
-        with:
-          sdkconfig: sdkconfig.defaults.esp32s3
+      - name: Build firmware
+        run: |
+          . /opt/esp/idf/export.sh
+          idf.py set-target esp32s3
+          cp sdkconfig.defaults.esp32s3 sdkconfig.defaults || true
+          echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
+          idf.py build
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
