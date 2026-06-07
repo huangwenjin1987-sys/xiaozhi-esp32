@@ -8,19 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: espressif/idf:release-v5.5
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build firmware
+      - name: Build firmware with Docker
         run: |
-          . /opt/esp/idf/export.sh
-          idf.py set-target esp32s3
-          cp sdkconfig.defaults.esp32s3 sdkconfig.defaults || true
-          echo "CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y" >> sdkconfig.defaults
-          idf.py build
+          docker run --rm -v $PWD:/project -w /project \
+            espressif/idf:release-v5.5 \
+            /bin/bash -c "idf.py set-target esp32s3 && \
+            cp sdkconfig.defaults.esp32s3 sdkconfig.defaults; \
+            echo 'CONFIG_BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_LCD_1_83=y' >> sdkconfig.defaults && \
+            idf.py build"
 
       - name: Archive firmware
         uses: actions/upload-artifact@v4
