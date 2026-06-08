@@ -268,7 +268,7 @@ const char* WifiBoard::GetNetworkStateIcon() {
 std::string WifiBoard::GetBoardJson() {
     auto& wifi = WifiManager::GetInstance();
     std::string json = R"({"type":")" + std::string(BOARD_TYPE) + R"(",)";
-    json += R"("name":")" + std::string(BOARD_NAME) + R"(",)";
+    json += R"("name":")" + SystemInfo::GetDeviceDisplayName() + R"(",)";
 
     if (!wifi.IsConfigMode()) {
         json += R"("ssid":")" + wifi.GetSsid() + R"(",)";

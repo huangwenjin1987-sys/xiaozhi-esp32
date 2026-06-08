@@ -54,6 +54,10 @@ std::string SystemInfo::GetUserAgent() {
     return user_agent;
 }
 
+std::string SystemInfo::GetDeviceDisplayName() {
+    return std::string(DEVICE_DISPLAY_NAME);
+}
+
 esp_err_t SystemInfo::PrintTaskCpuUsage(TickType_t xTicksToWait) {
     #define ARRAY_SIZE_OFFSET 5
     TaskStatus_t *start_array = NULL, *end_array = NULL;

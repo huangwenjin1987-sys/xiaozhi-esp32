@@ -182,7 +182,7 @@ const char* RndisBoard::GetNetworkStateIcon() {
 std::string RndisBoard::GetBoardJson() {
  
     std::string json = R"({"type":")" + std::string(BOARD_TYPE) + R"(",)";
-    json += R"("name":")" + std::string(BOARD_NAME) + R"(",)";
+    json += R"("name":")" + SystemInfo::GetDeviceDisplayName() + R"(",)";
 
     json += R"("mac":")" + SystemInfo::GetMacAddress() + R"("})";
     return json;

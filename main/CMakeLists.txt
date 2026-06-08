@@ -1037,8 +1037,12 @@ idf_component_register(SRCS ${SOURCES}
 if(NOT BOARD_NAME)
     set(BOARD_NAME ${BOARD_TYPE})
 endif()
+if(NOT DEVICE_DISPLAY_NAME)
+    set(DEVICE_DISPLAY_NAME ${BOARD_NAME})
+endif()
 target_compile_definitions(${COMPONENT_LIB}
                     PRIVATE BOARD_TYPE=\"${BOARD_TYPE}\" BOARD_NAME=\"${BOARD_NAME}\"
+                    PRIVATE DEVICE_DISPLAY_NAME=\"${DEVICE_DISPLAY_NAME}\"
                     PRIVATE BUILTIN_TEXT_FONT=${BUILTIN_TEXT_FONT} BUILTIN_ICON_FONT=${BUILTIN_ICON_FONT}
                     )
 

@@ -2,6 +2,7 @@
 #include "display.h"
 #include "application.h"
 #include "audio_codec.h"
+#include "system_info.h"
 #include <esp_log.h>
 #include <font_awesome.h>
 #include <cJSON.h>
@@ -182,7 +183,7 @@ void Nt26Board::SetPowerSaveLevel(PowerSaveLevel level) {
 std::string Nt26Board::GetBoardJson() {
     // Set the board type for OTA
     std::string board_json = std::string("{\"type\":\"" BOARD_TYPE "\",");
-    board_json += "\"name\":\"" BOARD_NAME "\",";
+    board_json += "\"name\":\"" + SystemInfo::GetDeviceDisplayName() + "\",";
     if (modem_) {
         board_json += "\"revision\":\"" + modem_->GetModuleRevision() + "\",";
         board_json += "\"carrier\":\"" + modem_->GetCarrierName() + "\",";

@@ -4,6 +4,7 @@
     "builds": [
         {
             "name": "esp32-s3-touch-lcd-1.83",
+            "display_name": "小明同学",
             "sdkconfig_append": [
                 "CONFIG_USE_WECHAT_MESSAGE_STYLE=n",
                 "CONFIG_USE_AFE_WAKE_WORD=n",

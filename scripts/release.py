@@ -4,6 +4,7 @@ import json
 import zipfile
 import argparse
 import re
+import shlex
 from pathlib import Path
 from typing import Optional
 
@@ -335,6 +336,7 @@ def release(board_type: str, config_filename: str = "config.json", *, filter_nam
     for build in builds:
         name = build["name"]
         board_leaf = board_type.split("/")[-1]
+        display_name = build.get("display_name", name)
 
         if board_leaf not in name:
             raise ValueError(f"build.name {name} must contain {board_leaf}")
@@ -381,8 +383,15 @@ def release(board_type: str, config_filename: str = "config.json", *, filter_nam
             f.write("# Append by release.py\n")
             for append in sdkconfig_append:
                 f.write(f"{append}\n")
-        # Build with macro BOARD_NAME defined to name
-        if os.system(f"idf.py -DBOARD_NAME={name} -DBOARD_TYPE={board_type} build") != 0:
+        # Build with macro BOARD_NAME defined to name and optional display name for UI/protocols
+        build_cmd = " ".join([
+            "idf.py",
+            f"-DBOARD_NAME={shlex.quote(name)}",
+            f"-DDEVICE_DISPLAY_NAME={shlex.quote(display_name)}",
+            f"-DBOARD_TYPE={shlex.quote(board_type)}",
+            "build",
+        ])
+        if os.system(build_cmd) != 0:
             print("build failed")
             sys.exit(1)
 

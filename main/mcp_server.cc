@@ -14,6 +14,7 @@
 #include "display.h"
 #include "oled_display.h"
 #include "board.h"
+#include "system_info.h"
 #include "settings.h"
 #include "lvgl_theme.h"
 #include "lvgl_display.h"
@@ -389,7 +390,9 @@ void McpServer::ParseMessage(const cJSON* json) {
             }
         }
         auto app_desc = esp_app_get_description();
-        std::string message = "{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{\"tools\":{}},\"serverInfo\":{\"name\":\"" BOARD_NAME "\",\"version\":\"";
+        std::string message = "{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{\"tools\":{}},\"serverInfo\":{\"name\":\"";
+        message += SystemInfo::GetDeviceDisplayName();
+        message += "\",\"version\":\"";
         message += app_desc->version;
         message += "\"}}";
         ReplyResult(id_int, message);

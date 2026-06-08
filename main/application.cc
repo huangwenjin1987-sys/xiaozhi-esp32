@@ -66,7 +66,7 @@ void Application::Initialize() {
     auto display = board.GetDisplay();
     display->SetupUI();
     // Print board name/version info
-    display->SetChatMessage("system", SystemInfo::GetUserAgent().c_str());
+    display->SetChatMessage("system", SystemInfo::GetDeviceDisplayName().c_str());
 
     // Setup the audio service
     auto codec = board.GetAudioCodec();
@@ -1128,4 +1128,3 @@ void Application::ResetProtocol() {
         protocol_.reset();
     });
 }
-
